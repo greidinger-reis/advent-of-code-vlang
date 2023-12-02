@@ -2,19 +2,7 @@ module utils
 
 import os
 
-pub struct Array {}
-
 pub struct Rune {}
-
-pub fn Array.sum(arr []int) int {
-	mut total := 0
-
-	for i in arr {
-		total += i
-	}
-
-	return total
-}
 
 pub fn Rune.to_int(r rune) ?int {
 	digit := r.str().int()

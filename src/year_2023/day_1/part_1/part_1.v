@@ -1,6 +1,7 @@
 module part_1
 
 import utils
+import arrays
 
 pub const filepath = @FILE
 pub const example_input = utils.get_example_input(filepath)
@@ -28,6 +29,6 @@ pub fn get_calibration_from_line(line string) int {
 pub fn solve(input string) int {
 	lines := input.split_into_lines()
 	digits := lines.map(get_calibration_from_line(it))
-	total := utils.Array.sum(digits)
+	total := arrays.sum[int](digits) or { panic('Could not sum digits') }
 	return total
 }
