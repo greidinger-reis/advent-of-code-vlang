@@ -10,17 +10,17 @@ pub const example_result = 281
 
 const digits_str = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
-fn Digit.all_from_str(str string) []int {
+fn Digit.all_from_str(line string) []int {
 	mut digits := []int{}
 
-	for i := 0; i < str.len; i++ {
-		sub_str := str[i..str.len]
-        digit_literal := get_digit_literal(sub_str[0])
+	for i := 0; i < line.len; i++ {
+		sub_str := line[i..str.len]
+		digit_literal := get_digit_literal(sub_str[0])
 
-        if digit_literal != 0 {
-            digits << digit_literal
-            continue
-        }
+		if digit_literal != 0 {
+			digits << digit_literal
+			continue
+		}
 
 		for digit in part_2.digits_str {
 			if sub_str.starts_with(digit) {

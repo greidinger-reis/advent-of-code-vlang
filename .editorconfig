@@ -6,3 +6,4 @@ trim_trailing_whitespace = true
 
 [*.v]
 indent_style = space
+indent_size = 4
