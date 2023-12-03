@@ -52,16 +52,22 @@ current_day := time.now().day
 year := fp.int('year', `y`, current_year, 'The current year to get input.')
 day := fp.int('day', `d`, current_day, 'The day to get input.')
 session_token_path := fp.string('token', `t`, 'session_token', 'Path to the file containing the session token.')
-out_path := fp.string('out', `o`, 'input.txt', 'Path to write the input.')
+out_path := fp.string_opt('out', `o`, 'Path to write the input.') or {
+	eprintln('Output path not provided.\n')
+	eprintln(fp.usage())
+	exit(1)
+}
+
+fp.finalize() or { panic(err) }
 
 if day > 25 {
-	eprintln('Invalid day for advent of code (must be <= 25)')
+	eprintln('Invalid day for advent of code (must be <= 25)\n')
 	eprintln(fp.usage())
 	exit(1)
 }
 
 session_token := os.read_file(session_token_path) or {
-	eprintln('Session token filepath not found or not provided.')
+	eprintln('Session token filepath not found.\n')
 	eprintln(fp.usage())
 	exit(1)
 }
@@ -73,7 +79,5 @@ input.write() or {
 	fp.usage()
 	exit(1)
 }
-
-fp.finalize() or { panic(err) }
 
 exit(0)
