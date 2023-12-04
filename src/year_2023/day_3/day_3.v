@@ -5,11 +5,11 @@ import arrays
 import regex
 
 const file = @FILE
-const pattern = r'\d*'
+const pattern_digits = r'\d*'
 const pattern_symbols = r'[^\w\s.]'
 pub const input = utils.get_actual_input(file)
 pub const example_input = utils.get_example_input(file, 1)
-pub const example_output = 4361
+pub const example_output_part_1 = 4361
 
 pub struct Match {
 	val       int
@@ -19,7 +19,7 @@ pub struct Match {
 
 pub fn part_1(input string) int {
 	lines := input.split_into_lines()
-	mut reg := regex.regex_opt(day_3.pattern) or { panic('invalid regex') }
+	mut reg := regex.regex_opt(day_3.pattern_digits) or { panic('invalid regex') }
 	mut reg_symbols := regex.regex_opt(day_3.pattern_symbols) or { panic('invalid regex') }
 	mut sum := 0
 
@@ -55,6 +55,24 @@ pub fn part_1(input string) int {
 		}
 
 		for m in matches {
+			left := if m.idx_start - 1 > 0 {
+				lines[line][m.idx_start - 1].ascii_str()
+			} else {
+				''
+			}
+
+			right := if m.idx_end + 1 < lines[line].len {
+				lines[line][m.idx_end].ascii_str()
+			} else {
+				''
+			}
+
+			if reg_symbols.matches_string(left) || reg_symbols.matches_string(right) {
+				sum += m.val
+				// println('value: ${m.val} sum: ${sum}')
+				continue
+			}
+
 			if !row_above.is_blank() {
 				directly_above := row_above[m.idx_start..m.idx_end]
 
@@ -73,29 +91,31 @@ pub fn part_1(input string) int {
 				full_row_above := '${top_left}${directly_above}${top_right}'
 				if reg_symbols.find_all_str(full_row_above).len > 0 {
 					sum += m.val
+					// println('value: ${m.val} sum: ${sum}')
 					continue
 				}
+			}
 
-				if !row_below.is_blank() {
-					directly_below := row_below[m.idx_start..m.idx_end]
+			if !row_below.is_blank() {
+				directly_below := row_below[m.idx_start..m.idx_end]
 
-					bottom_left := if m.idx_start - 1 > 0 {
-						row_below[m.idx_start - 1].ascii_str()
-					} else {
-						''
-					}
+				bottom_left := if m.idx_start - 1 > 0 {
+					row_below[m.idx_start - 1].ascii_str()
+				} else {
+					''
+				}
 
-					bottom_right := if m.idx_end + 1 < row_below.len {
-						row_below[m.idx_end].ascii_str()
-					} else {
-						''
-					}
+				bottom_right := if m.idx_end + 1 < row_below.len {
+					row_below[m.idx_end].ascii_str()
+				} else {
+					''
+				}
 
-					full_row_below := '${bottom_left}${directly_below}${bottom_right}'
-					if reg_symbols.find_all_str(full_row_below).len > 0 {
-						sum += m.val
-						continue
-					}
+				full_row_below := '${bottom_left}${directly_below}${bottom_right}'
+				if reg_symbols.find_all_str(full_row_below).len > 0 {
+					sum += m.val
+					// println('value: ${m.val} sum: ${sum}')
+					continue
 				}
 			}
 		}
