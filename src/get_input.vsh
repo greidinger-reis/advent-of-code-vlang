@@ -29,15 +29,15 @@ fn (mut i Input) write() ! {
 	}
 	req := http.fetch(url: url, cookies: cookies)!
 	if req.status_code != 200 {
-		panic('Failed to fetch input')
+		return error(req.body)
 	}
 
-	mut file := os.open_append(i.out_path)!
+	mut file := os.open_file(i.out_path, 'w')!
 	defer {
 		file.close()
 	}
 
-	file.write_string(req.body) or { panic(err) }
+	file.write_string(req.body)!
 }
 
 mut fp := flag.new_flag_parser(os.args)
@@ -54,7 +54,6 @@ day := fp.int('day', `d`, current_day, 'The day to get input.')
 session_token_path := fp.string('token', `t`, 'session_token', 'Path to the file containing the session token.')
 out_path := fp.string_opt('out', `o`, 'Path to write the input.') or {
 	eprintln('Output path not provided.\n')
-	eprintln(fp.usage())
 	exit(1)
 }
 
@@ -62,22 +61,20 @@ fp.finalize() or { panic(err) }
 
 if day > 25 {
 	eprintln('Invalid day for advent of code (must be <= 25)\n')
-	eprintln(fp.usage())
 	exit(1)
 }
 
 session_token := os.read_file(session_token_path) or {
 	eprintln('Session token filepath not found.\n')
-	eprintln(fp.usage())
 	exit(1)
 }
 
 mut input := Input.new(u32(year), u32(day), session_token, out_path)
 
 input.write() or {
-	eprintln('Could not write input for day:${day}')
-	fp.usage()
+	eprintln('Could not write input for day:${day} (${err})')
 	exit(1)
 }
 
+println('Input for day: ${day} written to ${out_path}')
 exit(0)

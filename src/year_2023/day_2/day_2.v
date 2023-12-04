@@ -38,7 +38,7 @@ mut:
 	blue  int
 }
 
-// find all games that are possible with the given args
+// possible_games find all games that are possible with the given args
 // args define the maximum possible number of cubes of each color in each draw
 // if a draw contains more cubes than the maximum, the game is not possible
 pub fn (games []Game) possible_games(args CubesCount) []Game {
@@ -84,7 +84,7 @@ pub fn (games []Game) possible_games(args CubesCount) []Game {
 }
 
 pub fn Game.from_line(line string) Game {
-	parts := line.split(':')
+	parts := line.split(': ')
 	game_id := parts[0].replace('Game ', '').int()
 
 	raw_draws := parts[1].split(';')
@@ -97,8 +97,7 @@ pub fn Game.from_line(line string) Game {
 }
 
 fn parse_draw(draw_str string) Draw {
-	trimmed_draw := draw_str.trim_space()
-	cube_counts_raw := trimmed_draw.split(', ')
+	cube_counts_raw := draw_str.split(', ')
 
 	draw_cubes := cube_counts_raw.map(fn (it string) DrawCube {
 		cube_count_parts := it.split(' ')
