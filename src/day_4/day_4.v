@@ -1,20 +1,13 @@
 module day_4
 
 import utils
+import arrays
 
 const filepath = @FILE
 pub const input = utils.get_actual_input(filepath)
 pub const example_input = utils.get_example_input(filepath, 1)
 pub const example_output = 13
 pub const example_output_part_2 = 30
-const example_cards_map_output = {
-	1: 1
-	2: 2
-	3: 4
-	4: 8
-	5: 14
-	6: 1
-}
 
 struct Card {
 	number          int
@@ -59,7 +52,7 @@ fn (cards []&Card) get_copies_from_win(card_number int) []&Card {
 	return cards[card_number..idx_end]
 }
 
-fn recursive_get_copies_from_card(cards []&Card, current_card &Card, mut card_map map[int]int, remaining int) {
+fn recursive_proccess_copies(cards []&Card, current_card &Card, mut card_map map[int]int, remaining int) {
 	card_map[current_card.number] += 1
 
 	if remaining == 0 {
@@ -67,10 +60,10 @@ fn recursive_get_copies_from_card(cards []&Card, current_card &Card, mut card_ma
 	}
 
 	copies := cards.get_copies_from_win(current_card.number)
+	// println('current_card: ${current_card.number}, remaining: ${remaining} copies: ${copies.map(it.number)}')
 
 	for copy in copies {
-		card_map[copy.number] += 1
-		recursive_get_copies_from_card(cards, copy, mut card_map, remaining - 1)
+		recursive_proccess_copies(cards, copy, mut card_map, copy.get_matches())
 	}
 }
 
@@ -82,7 +75,7 @@ fn (cards []&Card) process_win_copies() map[int]int {
 	}
 
 	for card in cards {
-		recursive_get_copies_from_card(cards, card, mut processed, card.get_matches())
+		recursive_proccess_copies(cards, card, mut processed, card.get_matches())
 	}
 
 	return processed
@@ -90,7 +83,7 @@ fn (cards []&Card) process_win_copies() map[int]int {
 
 fn Card.from_line(line string) &Card {
 	parts := line.split(':')
-	card_number := parts[0].split(' ')[1].int()
+	card_number := utils.String.get_first_int(parts[0]) or { panic('no card number') }
 	number_lists := parts[1].split(' | ')
 	winning_numbers := number_lists[0].trim_left(' ').split(' ').map(it.int())
 	my_numbers := number_lists[1].split(' ').map(it.int()).filter(it != 0)
@@ -117,10 +110,7 @@ pub fn part_1(input string) int {
 pub fn part_2(input string) int {
 	lines := input.split_into_lines()
 	cards := lines.map(Card.from_line(it))
-	mut sum := 0
-
 	card_map := cards.process_win_copies()
-	assert card_map == day_4.example_cards_map_output
 
-	return sum
+	return arrays.sum(card_map.values()) or { panic('sum failed') }
 }

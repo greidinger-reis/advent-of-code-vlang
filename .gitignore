@@ -24,3 +24,5 @@ bin/
 *.js
 session_token
 get_input
+
+dist/

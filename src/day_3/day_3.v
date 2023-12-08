@@ -121,52 +121,6 @@ pub fn part_1(input string) int {
 	return sum
 }
 
-// string_get_first_int takes a line and an index and returns the first int
-fn string_get_first_int(str string) ?int {
-	if str.len == 0 {
-		return none
-	}
-	mut final_str := ''
-
-	for i := 0; i < str.len; i++ {
-		ch := str[i]
-		if ch.is_digit() {
-			final_str += ch.ascii_str()
-		} else {
-			break
-		}
-	}
-
-	if final_str.is_blank() {
-		return none
-	}
-
-	return final_str.int()
-}
-
-// string_get_first_int_r takes a line and an index and returns the leftmost full int
-fn string_get_first_int_r(str string) ?int {
-	if str.len == 0 {
-		return none
-	}
-	mut final_str := ''
-
-	for i := str.len - 1; i >= 0; i-- {
-		ch := str[i]
-		if ch.is_digit() {
-			final_str = ch.ascii_str() + final_str
-		} else {
-			break
-		}
-	}
-
-	if final_str.is_blank() {
-		return none
-	}
-
-	return final_str.int()
-}
-
 pub fn part_2(input string) int {
 	lines := input.split_into_lines()
 	mut reg := regex.regex_opt(day_3.pattern_digits) or { panic('invalid regex_digits') }
@@ -200,7 +154,7 @@ pub fn part_2(input string) int {
 			right_substr := line_str[gear + 1..]
 
 			if right_substr[0].is_digit() {
-				if right_val := string_get_first_int(right_substr) {
+				if right_val := utils.String.get_first_int(right_substr) {
 					adjacent_part_numbers << right_val
 				}
 			}
@@ -208,7 +162,7 @@ pub fn part_2(input string) int {
 			left_substr := line_str[0..gear]
 
 			if left_substr[left_substr.len - 1].is_digit() {
-				if left_val := string_get_first_int_r(left_substr) {
+				if left_val := utils.String.get_first_int_r(left_substr) {
 					adjacent_part_numbers << left_val
 				}
 			}
