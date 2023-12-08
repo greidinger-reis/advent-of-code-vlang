@@ -37,6 +37,7 @@ fn (mut i Input) write() ! {
 		file.close()
 	}
 
+	dump(req)
 	file.write_string(req.body)!
 }
 

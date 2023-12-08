@@ -1,0 +1,15 @@
+Time:        42     89     91     89
+Distance:   308   1170   1291   1467
+HTTP/1.1 400 Bad Request
+Server: awselb/2.0
+Date: Fri, 08 Dec 2023 13:16:32 GMT
+Content-Type: text/html
+Content-Length: 122
+Connection: close
+
+<html>
+<head><title>400 Bad Request</title></head>
+<body>
+<center><h1>400 Bad Request</h1></center>
+</body>
+</html>

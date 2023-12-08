@@ -1,7 +1,7 @@
 module main
 
-import day_4
+import day_5
 
 fn main() {
-	println(day_4.part_2(day_4.input))
+	println(day_5.part_1(day_5.input))
 }
